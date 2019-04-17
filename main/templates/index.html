@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+	<title>Weather Graph</title>
+</head>
+<body>
+	<form method="post">
+		{% csrf_token %}
+		<input type="text" placeholder="City name" name="city">
+		<input type="submit" value="find">
+		<div id="chartContainer" style="height: 370px; width: 100%;"></div>
+	</form>
+</body>
+<script>
+	window.onload = function () {
+	var chart = new CanvasJS.Chart("chartContainer", {
+	animationEnabled: true,
+	
+	axisX:{
+		title: "Date",
+	},
+
+	axisY:{
+		title:"Temperature",
+	},
+	
+
+	data: [{
+		type: "line",
+		name: "CPU Utilization",
+		connectNullData: true,
+		//nullDataLineDashType: "solid",
+		/*xValueType: "dateTime",
+		xValueFormatString: "DD MMM hh:mm TT",
+		yValueFormatString: "#,##0.##\"%\"",*/
+		dataPoints: [
+			{% for w in weather %}
+            { x: {{w.date}}, y: {{w.temperature}} },
+            {% endfor %}
+		]
+	}]
+});
+chart.render();
+
+}
+
+</script>
+</html>
